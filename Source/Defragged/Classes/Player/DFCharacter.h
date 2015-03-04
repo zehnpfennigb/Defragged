@@ -25,22 +25,13 @@ class DEFRAGGED_API ADFCharacter : public ACharacter
     UFUNCTION()
     void MoveRight(float Val);
     
-    //First person camera
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
-    TSubobjectPtr<UCameraComponent> FirstPersonCameraComponent;
     
 	/*
     //Collection Volume
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Health)
     TSubobjectPtr<class USphereComponent> CollectionSphere;
     */
-    //Health of the character
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated, Category = Health)
-    float Health;
-
-	//Health of the character
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Health)
-	float MaxHealth;
+    
 
 	//
     
@@ -140,10 +131,6 @@ class DEFRAGGED_API ADFCharacter : public ACharacter
 	
 	// check if character is still alive
 	bool IsAlive() const;
-
-    // Gun muzzle's offset from the camera location
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
-    FVector MuzzleOffset;
     
     // Projectile class to spawn
     UPROPERTY(EditDefaultsOnly, Replicated, Category=Projectile)
@@ -219,4 +206,22 @@ protected:
 
 	UFUNCTION(reliable, server, WithValidation)
 		void ServerEquipWeapon(class ADFWeapon* NewWeapon);
+
+	public:
+		//First person camera
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		TSubobjectPtr<UCameraComponent> FirstPersonCameraComponent;
+
+		//Health of the character
+		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated, Category = Health)
+		float Health;
+
+		//Health of the character
+		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Health)
+		float MaxHealth;
+
+		// Gun muzzle's offset from the camera location
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		FVector MuzzleOffset;
+
 };

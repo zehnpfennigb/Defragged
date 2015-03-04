@@ -14,7 +14,7 @@ class DEFRAGGED_API ADFDeathMatch : public AGameMode
 	GENERATED_UCLASS_BODY()
 
 		//initialize player
-		virtual void InitNewPlayer(AController* NewPlayer, const TSharedPtr<FUniqueNetId>& UniqueId, const FString& Options) override;
+	virtual void InitNewPlayer(APlayerController* NewPlayer, const TSharedPtr<FUniqueNetId>& UniqueId, const FString& Options);
 
 	//initialize replicated game data
 	virtual void InitGameState() override;

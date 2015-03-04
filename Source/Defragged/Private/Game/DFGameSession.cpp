@@ -9,10 +9,10 @@ ADFGameSession::ADFGameSession(const class FPostConstructInitializeProperties& P
 {
 	if (!HasAnyFlags(RF_ClassDefaultObject))
 	{
-		OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &ADFGameSession::OnCreateSessionComplete);
-		OnDestroySessionCompleteDelegate = FOnDestroySessionCompleteDelegate::CreateUObject(this, &ADFGameSession::OnDestroySessionComplete);
-		OnJoinSessionCompleteDelegate = FOnJoinSessionCompleteDelegate::CreateUObject(this, &ADFGameSession::OnJoinSessionComplete);
-		OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &ADFGameSession::OnStartOnlineGameComplete);
+		//OnCreateSessionCompleteDelegate = FOnCreateSessionCompleteDelegate::CreateUObject(this, &ADFGameSession::OnCreateSessionComplete);
+		//OnDestroySessionCompleteDelegate = FOnDestroySessionCompleteDelegate::CreateUObject(this, &ADFGameSession::OnDestroySessionComplete);
+		//OnJoinSessionCompleteDelegate = FOnJoinSessionCompleteDelegate::CreateUObject(this, &ADFGameSession::OnJoinSessionComplete());
+		//OnStartSessionCompleteDelegate = FOnStartSessionCompleteDelegate::CreateUObject(this, &ADFGameSession::OnStartOnlineGameComplete);
 	}
 }
 

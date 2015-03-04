@@ -1,5 +1,5 @@
+// Fill out your copyright notice in the Description page of Project Settings.
 
+#include "DeFragged.h"
 
-#include "Defragged.h"
-
-IMPLEMENT_PRIMARY_GAME_MODULE(FDefaultGameModuleImpl, Defragged, "Defragged");
+IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, DeFragged, "DeFragged" );

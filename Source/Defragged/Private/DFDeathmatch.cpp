@@ -36,7 +36,7 @@ void ADFDeathMatch::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ADFDeathMatch::InitNewPlayer(AController* NewPlayer, const TSharedPtr<FUniqueNetId>& UniqueId, const FString& Options)
+void ADFDeathMatch::InitNewPlayer(APlayerController* NewPlayer, const TSharedPtr<FUniqueNetId>& UniqueId, const FString& Options)
 {
 	Super::InitNewPlayer(NewPlayer, UniqueId, Options);
 

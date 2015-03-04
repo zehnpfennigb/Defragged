@@ -1,11 +1,11 @@
-
+// Fill out your copyright notice in the Description page of Project Settings.
 
 using UnrealBuildTool;
 using System.Collections.Generic;
 
-public class DefraggedTarget : TargetRules
+public class DeFraggedTarget : TargetRules
 {
-	public DefraggedTarget(TargetInfo Target)
+	public DeFraggedTarget(TargetInfo Target)
 	{
 		Type = TargetType.Game;
 	}
@@ -20,6 +20,6 @@ public class DefraggedTarget : TargetRules
 		ref List<string> OutExtraModuleNames
 		)
 	{
-		OutExtraModuleNames.AddRange( new string[] { "Defragged" } );
+		OutExtraModuleNames.AddRange( new string[] { "DeFragged" } );
 	}
 }

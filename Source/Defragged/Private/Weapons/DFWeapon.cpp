@@ -47,7 +47,7 @@ ADFWeapon::ADFWeapon(const class FPostConstructInitializeProperties& PCIP) : Sup
 	PrimaryActorTick.TickGroup = TG_PrePhysics;
 	SetRemoteRoleForBackwardsCompat(ROLE_SimulatedProxy);
 	bReplicates = true;
-	bReplicateInstigator = true;
+//	bReplicateInstigator = true;
 	bNetUseOwnerRelevancy = true;
 }
 
