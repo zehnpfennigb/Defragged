@@ -170,20 +170,20 @@ class DEFRAGGED_API ADFCharacter : public ACharacter
 protected:
 	/** material instances for setting team color in mesh (3rd person view) */
 	UPROPERTY(Transient)
-		UMaterialInstanceDynamic* Blue;
+	UMaterialInstanceDynamic* Blue;
 
 	UPROPERTY(Transient)
-		UMaterialInstanceDynamic* Red;
+	UMaterialInstanceDynamic* Red;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 	//Pawn mesh: 1st person view
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	TSubobjectPtr<USkeletalMeshComponent> FirstPersonMesh;
+	USkeletalMeshComponent* FirstPersonMesh;
 
 	// Socket for attaching weapon
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
-		FName WeaponAttachPoint;
+	FName WeaponAttachPoint;
 
 	// Currently equipped weapon
 
@@ -202,15 +202,15 @@ protected:
 		TArray<class ADFWeapon*> Inventory;
 
 	UPROPERTY(EditDefaultsOnly, Category = Inventory)
-		TArray<TSubclassOf<class ADFWeapon> > DefaultInventoryClasses;
+	TArray<TSubclassOf<class ADFWeapon> > DefaultInventoryClasses;
 
 	UFUNCTION(reliable, server, WithValidation)
-		void ServerEquipWeapon(class ADFWeapon* NewWeapon);
+	void ServerEquipWeapon(class ADFWeapon* NewWeapon);
 
 	public:
 		//First person camera
 		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		TSubobjectPtr<UCameraComponent> FirstPersonCameraComponent;
+		UCameraComponent* FirstPersonCameraComponent;
 
 		//Health of the character
 		UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated, Category = Health)

@@ -13,6 +13,7 @@ class DEFRAGGED_API ADFTeamDeathMatch : public AGameMode
 {
 	GENERATED_UCLASS_BODY()
 
+public:
 	//initialize player
 	virtual void InitNewPlayer(APlayerController* NewPlayer, const TSharedPtr<FUniqueNetId>& UniqueId, const FString& Options);
 
@@ -26,6 +27,10 @@ class DEFRAGGED_API ADFTeamDeathMatch : public AGameMode
 
 	/** notify about kills */
 	virtual void Killed(AController* Killer, AController* KilledPlayer, APawn* KilledPawn);
+
+	UBlueprint* VirusBP;
+
+	UBlueprint* AntiVirusBP;
 
 
 protected:
@@ -66,6 +71,5 @@ protected:
 
 private:
 	float MinSpawnDelay;
-	UBlueprint* VirusBP;
-	UBlueprint* AntiVirusBP;
+	
 };

@@ -6,7 +6,7 @@
 #include "Pickup/DFPickup_Health.h"
 
 
-ADFCharacter::ADFCharacter(const class FPostConstructInitializeProperties& PCIP)
+ADFCharacter::ADFCharacter(const class FObjectInitializer& PCIP)
 	: Super(PCIP)
 {
     
@@ -24,7 +24,7 @@ ADFCharacter::ADFCharacter(const class FPostConstructInitializeProperties& PCIP)
     */
     // create a camera component
     FirstPersonCameraComponent = PCIP.CreateDefaultSubobject<UCameraComponent>(this, TEXT("FirstPersonCamera"));
-    FirstPersonCameraComponent->AttachParent = CapsuleComponent;
+    FirstPersonCameraComponent->AttachParent = GetCapsuleComponent();
     
     // position the camrea a bit above the eyes
     FirstPersonCameraComponent->RelativeLocation = FVector(0,0,50.0f + BaseEyeHeight);
@@ -40,14 +40,14 @@ ADFCharacter::ADFCharacter(const class FPostConstructInitializeProperties& PCIP)
 	FirstPersonMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
 
     // Everyone but the owner can see the regular body mesh
-    Mesh->SetOwnerNoSee(true);
-	Mesh->SetCollisionObjectType(ECC_Pawn);
-	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	Mesh->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Block);
-	Mesh->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+    GetMesh()->SetOwnerNoSee(true);
+	GetMesh()->SetCollisionObjectType(ECC_Pawn);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GetMesh()->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Block);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
-	CapsuleComponent->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	CapsuleComponent->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_WEAPON, ECR_Ignore);
 }
 
 void ADFCharacter::PostInitializeComponents()
@@ -120,7 +120,7 @@ FName ADFCharacter::GetWeaponAttachPoint() const
 
 USkeletalMeshComponent* ADFCharacter::GetPawnMesh() const
 {
-	return IsFirstPerson() ? FirstPersonMesh : Mesh;
+	return IsFirstPerson() ? FirstPersonMesh : GetMesh();
 }
 
 bool ADFCharacter::IsFirstPerson() const
@@ -164,7 +164,7 @@ void ADFCharacter::MoveForward(float Value)
         //find out which way is forward
         FRotator Rotation = Controller->GetControlRotation();
         //Limit pitch when walking or falling
-        if(CharacterMovement->IsMovingOnGround() || CharacterMovement->IsFalling())
+        if(GetCharacterMovement()->IsMovingOnGround() || GetCharacterMovement()->IsFalling())
         {
             Rotation.Pitch = 0.0f;
         }
@@ -190,7 +190,7 @@ void ADFCharacter::MoveRight(float Value)
 
 USkeletalMeshComponent* ADFCharacter::GetSpecifcPawnMesh(bool WantFirstPerson) const
 {
-	return WantFirstPerson == true ? FirstPersonMesh : Mesh;
+	return WantFirstPerson == true ? FirstPersonMesh : GetMesh();
 }
 
 float ADFCharacter::TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser)
@@ -243,7 +243,7 @@ bool ADFCharacter::Die(float KillingDamage, struct FDamageEvent const& DamageEve
 	GetWorld()->GetAuthGameMode<ADFTeamDeathMatch>()->Killed(Killer, KilledPlayer, this);
 
 	NetUpdateFrequency = GetDefault<ADFCharacter>()->NetUpdateFrequency;
-	CharacterMovement->ForceReplicationUpdate();
+	GetCharacterMovement()->ForceReplicationUpdate();
 	isDead = true;
 	OnDeath();
 	return true;
@@ -259,16 +259,16 @@ void ADFCharacter::OnDeath()
 	DetachFromControllerPendingDestroy();
 
 	//Disable collisions on capsule component
-	CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	CapsuleComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	GetCapsuleComponent()->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
 //	CollectionSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 //	CollectionSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 
-	if (Mesh)
+	if (GetMesh())
 	{
 		static FName CollisionProfileName(TEXT("Ragdoll"));
-		Mesh->SetCollisionProfileName(CollisionProfileName);
+		GetMesh()->SetCollisionProfileName(CollisionProfileName);
 	}
 
 	SetActorEnableCollision(true);
@@ -280,7 +280,8 @@ void ADFCharacter::OnDeath()
 
 	if (DeathAnimDuration > 0.f)
 	{
-		GetWorldTimerManager().SetTimer(this, &ADFCharacter::SetRagdoll, FMath::Min(0.1f, DeathAnimDuration), false);
+		FTimerHandle timerHandle;
+		GetWorldTimerManager().SetTimer(timerHandle, this, &ADFCharacter::SetRagdoll, FMath::Min(0.1f, DeathAnimDuration), false);
 	}
 	else
 	{
@@ -300,15 +301,15 @@ void ADFCharacter::SetRagdoll()
 {
 	bool bInRagdoll = false;
 
-	Mesh->SetAllBodiesSimulatePhysics(true);
-	Mesh->SetSimulatePhysics(true);
-	Mesh->WakeAllRigidBodies();
-	Mesh->bBlendPhysics = true;
+	GetMesh()->SetAllBodiesSimulatePhysics(true);
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->WakeAllRigidBodies();
+	GetMesh()->bBlendPhysics = true;
 	bInRagdoll = true;
 
-	CharacterMovement->StopMovementImmediately();
-	CharacterMovement->DisableMovement();
-	CharacterMovement->SetComponentTickEnabled(false);
+	GetCharacterMovement()->StopMovementImmediately();
+	GetCharacterMovement()->DisableMovement();
+	GetCharacterMovement()->SetComponentTickEnabled(false);
 
 	if (!bInRagdoll)
 	{
@@ -364,15 +365,15 @@ void ADFCharacter::SpawnDefaultInventory()
 	//int32 NumWeaponClasses = DefaultInventoryClasses.Num();
 	//for (int32 i = 0; i < NumWeaponClasses; i++)
 	//{
-	if (DefaultInventoryClasses[0])
-	{
-		FActorSpawnParameters SpawnInfo;
-		SpawnInfo.bNoCollisionFail = true;
-		ADFWeapon* NewWeapon = GetWorld()->SpawnActor<ADFWeapon>(DefaultInventoryClasses[0], SpawnInfo);
-		AddWeapon(NewWeapon);
-	}
+//	if (DefaultInventoryClasses[0])
+//	{
+//		FActorSpawnParameters SpawnInfo;
+//		SpawnInfo.bNoCollisionFail = true;
+//		ADFWeapon* NewWeapon = GetWorld()->SpawnActor<ADFWeapon>(DefaultInventoryClasses[0], SpawnInfo);
+//		AddWeapon(NewWeapon);
+//	}
 	//}
-	EquipWeapon(Inventory[0]);
+//	EquipWeapon(Inventory[0]);
 }
 
 void ADFCharacter::DestroyInventory()
